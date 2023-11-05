@@ -19,6 +19,50 @@ class Laboratory():
     
     def mixPotion(self, name, type, stat, primaryIngredient, secondaryIngredient):
         '''Creates potion from recipe sent from alchemist'''
+        # If output is extreme potion
+        if type == "Extreme":
+                # If primary ingredient is in laboratory
+                if primaryIngredient in self.__herbs or primaryIngredient in self.__catalysts:
+                    # If secondary ingredient is in laboratory
+                    if secondaryIngredient in self.__potions:
+                        
+                        # Remove ingredients
+                        if primaryIngredient in self.__herbs:
+                            self.__herbs.remove(primaryIngredient)
+                        elif primaryIngredient in self.__catalysts:
+                            self.__catalysts.remove(primaryIngredient)
+                        self.__potions.remove(secondaryIngredient)
+
+                        # Add potion
+                        self.__potions.append(name)
+
+                # If ingredients are not present        
+                    else:
+                        raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
+                else:
+                    raise ValueError(f"{primaryIngredient} is not currently a valid ingredient in the Laboratory!")
+                
+        # If output is super potion
+        elif type == "Super":
+            # If primary ingredient is in laboratory
+            if primaryIngredient in self.__herbs:        
+                # If secondary ingredient is in laboratory
+                if secondaryIngredient in self.__catalysts:
+
+                    # Remove ingredients
+                    self.__herbs.remove(primaryIngredient)
+                    self.__catalysts.remove(secondaryIngredient)
+
+                    # Add potion
+                    self.__potions.append(name)
+                    
+            # If ingredients are not present           
+                else:
+                        raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
+            else:
+                raise ValueError(f"{primaryIngredient} is not currently a valid ingredient in the Laboratory!")
+                            
+
         print(f"{name}, {type}, {stat}, {primaryIngredient}, {secondaryIngredient}")
 
     def addReagent(self, reagent, amount):
@@ -72,10 +116,10 @@ class Alchemist():
         
         # Get potion type and stat
         if "Super" in recipe:
-            type = "Super Potion"
+            type = recipe[:-7]
             stat = recipe[6:]
         elif "Extreme" in recipe:
-            type = "Extreme Potion"
+            type = recipe[:-7]
             stat = recipe[8:]
         else:
             raise NameError(f"The {recipe} is not a Super Potion or an Extreme Potion!") 
