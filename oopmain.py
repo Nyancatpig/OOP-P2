@@ -139,3 +139,31 @@ class Reagent():
     def setPotency(self, potency):
         '''Sets the potency variable'''
         self.__potency = potency
+
+class Herb(Reagent):
+    def __init__(self, name, potency, grimy):
+        super().__init__(name, potency, grimy)
+        self.__grimy = grimy
+
+    def refine(self):
+        pass
+
+    def getGrimy(self):
+        '''Gets the grimy variable'''
+        return self.__grimy
+    
+    def setGrimy(self, grimy):
+        '''Sets the grimy variable'''
+        self.__grimy = grimy
+
+class Catalyst(Reagent):
+    def __innit__(self, name, potency, quality):
+        super().__init__(name, potency)
+        self.__quality = quality
+
+    def refine(self):
+        pass
+
+    def getQuality(self):
+        '''Gets the quality variable'''
+        return self.__quality
