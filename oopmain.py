@@ -79,7 +79,7 @@ class Potion():
         return self.__boost
     
     def setBoost(self, boost):
-        '''Sets the boost'''
+        '''Sets the boost variable'''
         self.__boost = boost
 
 class SuperPotion(Potion):
@@ -117,3 +117,25 @@ class ExtremePotion(Potion):
     def getPotion(self):
        '''Gets the potion variable'''
        return self.__potion
+    
+class Reagent():
+    '''Reagent class, an ingredient'''
+    def __init__(self, name, potency):
+        self.__name = name
+        self.__potency = potency
+
+    @abstractmethod
+    def refine(self):
+        pass
+
+    def getName(self):
+        '''Gets the name variable'''
+        return self.__name
+    
+    def getPotency(self):
+        '''Gets the potency variable'''
+        return self.__potency
+    
+    def setPotency(self, potency):
+        '''Sets the potency variable'''
+        self.__potency = potency
