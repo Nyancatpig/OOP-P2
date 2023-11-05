@@ -26,6 +26,13 @@ class Laboratory():
 class Alchemist():
     '''Alchemist class, character with actions'''
     def __init__(self, attack, strength, defense, magic, ranged, necromancy, laboratory, recipes):
+        self.__validateStat("attack", attack)
+        self.__validateStat("strength", strength)
+        self.__validateStat("defense", defense)
+        self.__validateStat("magic", magic)
+        self.__validateStat("ranged", ranged)
+        self.__validateStat("necromancy", necromancy)
+
         self.__attack = attack
         self.__strength = strength
         self.__defense = defense
@@ -34,6 +41,11 @@ class Alchemist():
         self.__necromancy = necromancy
         self.__laboratory = laboratory
         self.__recipes = recipes
+
+    def __validateStat(self, attributeName, value):
+        '''Check if variable isn't between 0 and 100'''
+        if not (0 <= value <= 100):
+            raise ValueError(f"Alchemist's {attributeName} must be between 0 and 100!")
 
     def getLaboratory(self):
         '''Gets the laboratory variable'''
@@ -101,7 +113,7 @@ class SuperPotion(Potion):
         return self.__catalyst
     
 class ExtremePotion(Potion):
-    '''Extreme Potion class, potion but extreme'''
+    '''Extreme Potion class, super potion but extreme'''
     def __init__(self, name, stat, boost, reagent, potion):
         super().__init__(name, stat, boost)
         self.__reagent = reagent
