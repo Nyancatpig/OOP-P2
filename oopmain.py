@@ -12,10 +12,10 @@ from abc import ABC, abstractmethod
 
 class Laboratory():
     '''Laboratory class, owns other classes'''
-    def __init__(self):
-        self.__potions = []
-        self.__herbs = []
-        self.__catalysts = []
+    def __init__(self, potions, herbs, catalysts):
+        self.__potions = potions
+        self.__herbs = herbs
+        self.__catalysts = catalysts
     
     def mixPotion(self, name, type, stat, primaryIngredient, secondaryIngredient):
         pass
@@ -25,7 +25,7 @@ class Laboratory():
 
 class Alchemist():
     '''Alchemist class, character with actions'''
-    def __init__(self, attack, strength, defense, magic, ranged, necromancy, laboratory):
+    def __init__(self, attack, strength, defense, magic, ranged, necromancy, laboratory, recipes):
         self.__attack = attack
         self.__strength = strength
         self.__defense = defense
@@ -33,7 +33,7 @@ class Alchemist():
         self.__ranged = ranged
         self.__necromancy = necromancy
         self.__laboratory = laboratory
-        self.__recipes = {}
+        self.__recipes = recipes
 
     def getLaboratory(self):
         '''Gets the laboratory variable'''
