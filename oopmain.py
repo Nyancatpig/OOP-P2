@@ -67,17 +67,53 @@ class Potion():
         pass
 
     def getName(self):
-        '''Gets the name'''
+        '''Gets the name variable'''
         return self.__name
     
     def getStat(self):
-        '''Gets the stat'''
+        '''Gets the stat variable'''
         return self.__stat
     
     def getBoost(self):
-        '''Gets the boost'''
+        '''Gets the boost variable'''
         return self.__boost
     
     def setBoost(self, boost):
         '''Sets the boost'''
         self.__boost = boost
+
+class SuperPotion(Potion):
+    '''Super Potion class, potion but super'''
+    def __init__(self, name, stat, boost, herb, catalyst):
+        super().__init__(name, stat, boost)
+        self.__herb = herb
+        self.__catalyst = catalyst
+
+    def calculateBoost(self):
+        pass
+
+    def getHerb(self):
+        '''Gets the herb variable'''
+        return self.__herb
+    
+    def getCatalyst(self):
+        '''Gets the catalyst variable'''
+        return self.__catalyst
+    
+class ExtremePotion(Potion):
+    '''Extreme Potion class, potion but extreme'''
+    def __init__(self, name, stat, boost, reagent, potion):
+        super().__init__(name, stat, boost)
+        self.__reagent = reagent
+        self.__potion = potion
+
+    def calculateBoost(self):
+        pass
+
+    def getReagent(self):
+        '''Gets the reagent variable'''
+        return self.__reagent
+    
+    def getPotion(self):
+       '''Gets the potion variable'''
+       return self.__potion
