@@ -11,5 +11,8 @@ import oopmain
 
 tower = oopmain.Laboratory([], [], [])
 magnificus = oopmain.Alchemist(45, 60, 82, 85, 34, 27, tower, [])
-
 print(magnificus.getLaboratory().__doc__)
+magnificus.mixPotion("Super Attack")
+
+# leshy = oopmain.Alchemist(103, 35, 66, 75, 34, 56, tower, [])
+# # print(leshy.getLaboratory().__doc__)

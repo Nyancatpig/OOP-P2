@@ -18,7 +18,8 @@ class Laboratory():
         self.__catalysts = catalysts
     
     def mixPotion(self, name, type, stat, primaryIngredient, secondaryIngredient):
-        pass
+        '''Creates potion from recipe sent from alchemist'''
+        print(f"{name}, {type}, {stat}, {primaryIngredient}, {secondaryIngredient}")
 
     def addReagent(self, reagent, amount):
         pass
@@ -40,7 +41,10 @@ class Alchemist():
         self.__ranged = ranged
         self.__necromancy = necromancy
         self.__laboratory = laboratory
-        self.__recipes = recipes
+        self.__recipes = {
+            "Super Attack": {"Herb": "Irit", "Catalyst": "Eye of Newt"},
+            "Extreme Attack": {"Herb": "Avantoe", "Super Potion": "Super Attack"}
+        }
 
     def __validateStat(self, attributeName, value):
         '''Check if variable isn't between 0 and 100'''
@@ -56,7 +60,27 @@ class Alchemist():
         return self.__recipes
 
     def mixPotion(self, recipe):
-        pass
+        '''Sends potion recipe to laboratory'''
+        # Get ingredients
+        if recipe in self.__recipes:
+            ingredientsList = list(self.__recipes[recipe].values())
+
+            primary =  ingredientsList[0]
+            secondary = ingredientsList[1]
+        else:
+            raise KeyError(f"There is no {recipe} potion recipe!") 
+        
+        # Get potion type and stat
+        if "Super" in recipe:
+            type = "Super Potion"
+            stat = recipe[6:]
+        elif "Extreme" in recipe:
+            type = "Extreme Potion"
+            stat = recipe[8:]
+        else:
+            raise NameError(f"The {recipe} is not a Super Potion or an Extreme Potion!") 
+        
+        self.__laboratory.mixPotion(recipe, type, stat, primary, secondary)
 
     def drinkPotion(self, potion):
         pass
