@@ -55,7 +55,7 @@ class Laboratory():
 
                     # Add potion
                     self.__potions.append(name)
-                    
+
             # If ingredients are not present           
                 else:
                         raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
@@ -63,24 +63,24 @@ class Laboratory():
                 raise ValueError(f"{primaryIngredient} is not currently a valid ingredient in the Laboratory!")
                             
 
-        print(f"{name}, {type}, {stat}, {primaryIngredient}, {secondaryIngredient}")
+        print(f"Alchemist mixed {name}, using {primaryIngredient} and {secondaryIngredient}")
 
     def addReagent(self, reagent, amount):
         pass
 
 class Alchemist():
     '''Alchemist class, character with actions'''
-    def __init__(self, attack, strength, defense, magic, ranged, necromancy, laboratory, recipes):
+    def __init__(self, attack, strength, defence, magic, ranged, necromancy, laboratory):
         self.__validateStat("attack", attack)
         self.__validateStat("strength", strength)
-        self.__validateStat("defense", defense)
+        self.__validateStat("defence", defence)
         self.__validateStat("magic", magic)
         self.__validateStat("ranged", ranged)
         self.__validateStat("necromancy", necromancy)
 
         self.__attack = attack
         self.__strength = strength
-        self.__defense = defense
+        self.__defence = defence
         self.__magic = magic
         self.__ranged = ranged
         self.__necromancy = necromancy
@@ -127,7 +127,46 @@ class Alchemist():
         self.__laboratory.mixPotion(recipe, type, stat, primary, secondary)
 
     def drinkPotion(self, potion):
-        pass
+        '''Drinks potion and adds status effect to alchemist'''
+        if potion in self.__laboratory._Laboratory__potions:
+            self.__laboratory._Laboratory__potions.remove(potion)
+
+            # Add potion stats
+            if "Attack" in potion:
+                self.addPotionStat(potion, "_Alchemist__attack")
+            elif "Strength" in potion:
+                self.addPotionStat(potion, "_Alchemist__strength")
+            elif "Defence" in potion:
+                self.addPotionStat(potion, "_Alchemist__defence")
+            elif "Magic" in potion:
+                self.addPotionStat(potion, "_Alchemist__magic")
+            elif "Ranging" in potion:
+                self.addPotionStat(potion, "_Alchemist__ranged")
+            elif "Necromancy" in potion:
+                self.addPotionStat(potion, "_Alchemist__necromancy")    
+    
+    def addPotionStat(self, potion, statName):
+        '''A helper function for the drinkPotion function'''
+        oldStat = getattr(self, statName)
+        
+        # Add to stat
+        if "Super" in potion:
+            new_stat = oldStat + 10
+            if new_stat > 100:
+                new_stat = 100
+            # Set variable instead of just the reference
+            setattr(self, statName, new_stat)
+            print(f"Alchemist drank {potion}, their {potion[6:]} has been increased from {oldStat} to {new_stat}")
+        elif "Extreme" in potion:
+            new_stat = oldStat + 20
+            if new_stat > 100:
+                new_stat = 100
+            # Set variable instead of just the reference
+            setattr(self, statName, new_stat)
+            print(f"Alchemist drank {potion}, their {potion[8:]} has been increased from {oldStat} to {new_stat}")
+        else:
+            raise NameError(f"The {potion} is not a Super Potion or an Extreme Potion!")
+        
 
     def collectReagent(self, reagent, amount):
         pass
