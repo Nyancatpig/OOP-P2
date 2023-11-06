@@ -34,7 +34,10 @@ class Laboratory():
                         self.__potions.remove(secondaryIngredient)
 
                         # Add potion
-                        self.__potions.append(name)
+                        newReagent = Reagent(primaryIngredient, 0)
+                        newPot = Potion(name, stat)
+                        newPotion = ExtremePotion(name, stat, newReagent, newPot)
+                        self.__potions.append(newPotion)
 
                 # If ingredients are not present        
                     else:
@@ -54,7 +57,11 @@ class Laboratory():
                     self.__catalysts.remove(secondaryIngredient)
 
                     # Add potion
-                    self.__potions.append(name)
+                    #newPotion = SuperPotion(name, stat, Herb(primaryIngredient, 0, False), Catalyst(secondaryIngredient, 0, 0))
+                    newHerb = Herb(primaryIngredient, 0, False)
+                    newCatalyst = Catalyst(secondaryIngredient, 0, 0)
+                    newPotion = SuperPotion(name, stat, newHerb, newCatalyst)
+                    self.__potions.append(newPotion)
 
             # If ingredients are not present           
                 else:
@@ -132,38 +139,40 @@ class Alchemist():
             self.__laboratory._Laboratory__potions.remove(potion)
 
             # Add potion stats
-            if "Attack" in potion:
+            if potion.getStat() == "Attack":
                 self.addPotionStat(potion, "_Alchemist__attack")
-            elif "Strength" in potion:
+            if potion.getStat() == "Strength":
                 self.addPotionStat(potion, "_Alchemist__strength")
-            elif "Defence" in potion:
+            if potion.getStat() == "Defence":
                 self.addPotionStat(potion, "_Alchemist__defence")
-            elif "Magic" in potion:
+            if potion.getStat() == "Magic":
                 self.addPotionStat(potion, "_Alchemist__magic")
-            elif "Ranging" in potion:
+            if potion.getStat() == "Ranging":
                 self.addPotionStat(potion, "_Alchemist__ranged")
-            elif "Necromancy" in potion:
+            if potion.getStat() == "Necromancy":
                 self.addPotionStat(potion, "_Alchemist__necromancy")    
+        return f"{potion.getName()}"
     
     def addPotionStat(self, potion, statName):
         '''A helper function for the drinkPotion function'''
         oldStat = getattr(self, statName)
         
         # Add to stat
-        if "Super" in potion:
+        name = potion.getName()
+        if "Super" in name:
             new_stat = oldStat + 10
             if new_stat > 100:
                 new_stat = 100
             # Set variable instead of just the reference
             setattr(self, statName, new_stat)
-            print(f"Alchemist drank {potion}, their {potion[6:]} has been increased from {oldStat} to {new_stat}")
-        elif "Extreme" in potion:
+            print(f"Alchemist drank {name}, their {name[6:]} has been increased from {oldStat} to {new_stat}")
+        elif "Extreme" in name:
             new_stat = oldStat + 20
             if new_stat > 100:
                 new_stat = 100
             # Set variable instead of just the reference
             setattr(self, statName, new_stat)
-            print(f"Alchemist drank {potion}, their {potion[8:]} has been increased from {oldStat} to {new_stat}")
+            print(f"Alchemist drank {name}, their {name[8:]} has been increased from {oldStat} to {new_stat}")
         else:
             raise NameError(f"The {potion} is not a Super Potion or an Extreme Potion!")
         
@@ -176,10 +185,10 @@ class Alchemist():
 
 class Potion():
     '''Potion class, base for all potions'''
-    def __int__(self, name, stat, boost):
+    def __init__(self, name, stat):
         self.__name = name
         self.__stat = stat
-        self.__boost = boost
+        self.__boost = 0
     
     @abstractmethod
     def calculateBoost(self):
@@ -203,13 +212,13 @@ class Potion():
 
 class SuperPotion(Potion):
     '''Super Potion class, potion but super'''
-    def __init__(self, name, stat, boost, herb, catalyst):
-        super().__init__(name, stat, boost)
+    def __init__(self, name, stat, herb, catalyst):
+        super().__init__(name, stat)
         self.__herb = herb
         self.__catalyst = catalyst
 
     def calculateBoost(self):
-        pass
+        return 10
 
     def getHerb(self):
         '''Gets the herb variable'''
@@ -221,13 +230,13 @@ class SuperPotion(Potion):
     
 class ExtremePotion(Potion):
     '''Extreme Potion class, super potion but extreme'''
-    def __init__(self, name, stat, boost, reagent, potion):
-        super().__init__(name, stat, boost)
+    def __init__(self, name, stat, reagent, potion):
+        super().__init__(name, stat)
         self.__reagent = reagent
         self.__potion = potion
 
     def calculateBoost(self):
-        pass
+        return 20
 
     def getReagent(self):
         '''Gets the reagent variable'''
@@ -261,7 +270,7 @@ class Reagent():
 
 class Herb(Reagent):
     def __init__(self, name, potency, grimy):
-        super().__init__(name, potency, grimy)
+        super().__init__(name, potency)
         self.__grimy = grimy
 
     def refine(self):
@@ -276,7 +285,7 @@ class Herb(Reagent):
         self.__grimy = grimy
 
 class Catalyst(Reagent):
-    def __innit__(self, name, potency, quality):
+    def __init__(self, name, potency, quality):
         super().__init__(name, potency)
         self.__quality = quality
 
