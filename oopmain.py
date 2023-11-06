@@ -24,24 +24,27 @@ class Laboratory():
                 # If primary ingredient is in laboratory
                 if primaryIngredient in self.__herbs or primaryIngredient in self.__catalysts:
                     # If secondary ingredient is in laboratory
-                    if secondaryIngredient in self.__potions:
-                        
-                        # Remove ingredients
-                        if primaryIngredient in self.__herbs:
-                            self.__herbs.remove(primaryIngredient)
-                        elif primaryIngredient in self.__catalysts:
-                            self.__catalysts.remove(primaryIngredient)
-                        self.__potions.remove(secondaryIngredient)
+                    loopBool = False
+                    for potionX in self.__potions:
+                        if loopBool == False:
+                            if potionX.getName() == secondaryIngredient:
 
-                        # Add potion
-                        newReagent = Reagent(primaryIngredient, 0)
-                        newPot = Potion(name, stat)
-                        newPotion = ExtremePotion(name, stat, newReagent, newPot)
-                        self.__potions.append(newPotion)
+                                loopBool = True
+                                # Add potion
+                                newReagent = Reagent(primaryIngredient, 0)
+                                newPotion = ExtremePotion(name, stat, newReagent, potionX)
+                                self.__potions.append(newPotion)
+
+                                # Remove ingredients
+                                if primaryIngredient in self.__herbs:
+                                    self.__herbs.remove(primaryIngredient)
+                                elif primaryIngredient in self.__catalysts:
+                                    self.__catalysts.remove(primaryIngredient)
+                                self.__potions.remove(potionX)
 
                 # If ingredients are not present        
-                    else:
-                        raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
+                            else:
+                                raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
                 else:
                     raise ValueError(f"{primaryIngredient} is not currently a valid ingredient in the Laboratory!")
                 
@@ -52,16 +55,15 @@ class Laboratory():
                 # If secondary ingredient is in laboratory
                 if secondaryIngredient in self.__catalysts:
 
-                    # Remove ingredients
-                    self.__herbs.remove(primaryIngredient)
-                    self.__catalysts.remove(secondaryIngredient)
-
                     # Add potion
-                    #newPotion = SuperPotion(name, stat, Herb(primaryIngredient, 0, False), Catalyst(secondaryIngredient, 0, 0))
                     newHerb = Herb(primaryIngredient, 0, False)
                     newCatalyst = Catalyst(secondaryIngredient, 0, 0)
                     newPotion = SuperPotion(name, stat, newHerb, newCatalyst)
                     self.__potions.append(newPotion)
+
+                    # Remove ingredients
+                    self.__herbs.remove(primaryIngredient)
+                    self.__catalysts.remove(secondaryIngredient)
 
             # If ingredients are not present           
                 else:
@@ -216,9 +218,12 @@ class SuperPotion(Potion):
         super().__init__(name, stat)
         self.__herb = herb
         self.__catalyst = catalyst
+        self.__boost = self.calculateBoost()
 
     def calculateBoost(self):
-        return 10
+        newBoost = round((self.__herb.getPotency() + (self.__catalyst.getPotency() * self.__catalyst.getQuality())) * 1.5, 2)
+        print(f"Super Potion Boost is: {newBoost}")
+        return newBoost
 
     def getHerb(self):
         '''Gets the herb variable'''
@@ -234,9 +239,13 @@ class ExtremePotion(Potion):
         super().__init__(name, stat)
         self.__reagent = reagent
         self.__potion = potion
+        self.__boost = self.calculateBoost()
 
     def calculateBoost(self):
-        return 20
+        print(self.__potion)
+        newBoost = round((self.__reagent.getPotency() * self.__potion.calculateBoost()) * 3.0, 2)
+        print(f"Extreme Potion Boost is: {newBoost}")
+        return newBoost
 
     def getReagent(self):
         '''Gets the reagent variable'''
