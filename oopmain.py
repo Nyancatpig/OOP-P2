@@ -112,7 +112,8 @@ class Laboratory():
     def addReagent(self, reagent, amount):
         if isinstance(reagent, Herb):
             for i in range(amount):
-                self.__herbs.append(reagent)
+                new_herb = Herb(reagent.getName(), reagent.getPotency(), reagent.getGrimy())
+                self.__herbs.append(new_herb)
         elif isinstance(reagent, Catalyst):
             for x in range(amount):
                 self.__catalysts.append(reagent)
@@ -205,17 +206,17 @@ class Alchemist():
         name = potion.getName()
         if "Super" in name:
             new_stat = oldStat + potion.calculateBoost()
-            if new_stat > 100:
-                new_stat = 100
-            # Set variable instead of just the reference
+            #if new_stat > 100:
+            #    new_stat = 100
+            ## Set variable instead of just the reference
             setattr(self, statName, new_stat)
             print(f"Alchemist drank {name}, their {name[6:]} has been increased from {oldStat} to {new_stat}")
-            
+
         elif "Extreme" in name:
             new_stat = oldStat + potion.calculateBoost()
-            if new_stat > 100:
-                new_stat = 100
-            # Set variable instead of just the reference
+            #if new_stat > 100:
+            #    new_stat = 100
+            ## Set variable instead of just the reference
             setattr(self, statName, new_stat)
             print(f"Alchemist drank {name}, their {name[8:]} has been increased from {oldStat} to {new_stat}")
         else:
@@ -227,7 +228,10 @@ class Alchemist():
         self.getLaboratory().addReagent(reagent, amount)
 
     def refineReagents(self):
-        pass
+        for herb in self.__laboratory._Laboratory__herbs:
+            herb.refine()
+        for catalyst in self.__laboratory._Laboratory__catalysts:
+            catalyst.refine()
 
 class Potion():
     '''Potion class, base for all potions'''
@@ -327,7 +331,11 @@ class Herb(Reagent):
         self.__grimy = grimy
 
     def refine(self):
-        pass
+        oldGrimy = self.getGrimy()
+        oldPotency = self.getPotency()
+        self.setGrimy(False)
+        self.setPotency(round(self.getPotency() * 2.5, 2))
+        print(f"{self.getName()} has been refined! Grimy went from {oldGrimy} to {self.__grimy}, Potency went from {oldPotency} to {self.getPotency()}")
 
     def getGrimy(self):
         '''Gets the grimy variable'''
@@ -343,7 +351,21 @@ class Catalyst(Reagent):
         self.__quality = quality
 
     def refine(self):
-        pass
+        oldQuality = self.getQuality()
+        oldPotency = self.getPotency()
+        isTen = False
+        if self.__quality < 8.9:
+            self.__quality = round(self.__quality + 1.1, 2)
+        elif self.__quality >= 10:
+            isTen = True
+        else:
+            self.__quality = 10
+        self.setPotency(round(self.getPotency() * 2.5, 2))
+        
+        if isTen == True:
+            print(f"{self.getName()} has been refined! Quality was already at the maximum, it cannot be refined any further, Potency went from {oldPotency} to {self.getPotency()}")
+        else:
+            print(f"{self.getName()} has been refined! Quality went from {oldQuality} to {self.__quality}, Potency went from {oldPotency} to {self.getPotency()}")
 
     def getQuality(self):
         '''Gets the quality variable'''
