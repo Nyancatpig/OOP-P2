@@ -1,6 +1,6 @@
 '''
 File: oopmain.py
-Description: A brief description of this Python module.
+Description: Main Alchemist Game File.
 Author: Bailey Csortan
 StudentID: 110409234
 EmailID: csoby001
@@ -130,6 +130,15 @@ class Laboratory():
                 self.__catalysts.append(newCatalyst)
         else:
             raise TypeError(f"{reagent} is neither a Herb or a Catalyst!")
+        
+    def getPotions(self):
+        return self.__potions
+    
+    def getHerbs(self):
+        return self.__herbs
+    
+    def getCatalysts(self):
+        return self.__catalysts
 
 class Alchemist():
     '''Alchemist class, character with actions'''
@@ -202,7 +211,7 @@ class Alchemist():
 
     def drinkPotion(self, potion):
         '''Drinks potion and adds status effect to alchemist'''
-        if potion in self.__laboratory._Laboratory__potions:
+        if potion in self.__laboratory.getPotions():
             print(potion.getStat())
             # Add potion stats
             if potion.getStat() == "Attack":
@@ -218,7 +227,7 @@ class Alchemist():
             if potion.getStat() == "Necromancy":
                 self.addPotionStat(potion, "_Alchemist__necromancy")  
 
-            self.__laboratory._Laboratory__potions.remove(potion)  
+            self.__laboratory.getPotions().remove(potion)  
         return f"{potion.getName()}"
     
     def addPotionStat(self, potion, statName):
@@ -251,9 +260,9 @@ class Alchemist():
         self.getLaboratory().addReagent(reagent, amount)
 
     def refineReagents(self):
-        for herb in self.__laboratory._Laboratory__herbs:
+        for herb in self.__laboratory.getHerbs():
             herb.refine()
-        for catalyst in self.__laboratory._Laboratory__catalysts:
+        for catalyst in self.__laboratory.getCatalysts():
             catalyst.refine()
 
 class Potion():

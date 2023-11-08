@@ -1,6 +1,6 @@
 '''
 File: ooptest.py
-Description: A brief description of this Python module.
+Description: Alchemist Testing File.
 Author: Bailey Csortan
 StudentID: 110409234
 EmailID: csoby001
@@ -13,6 +13,7 @@ from oopmain import *
 class TestAlchemy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        '''List all possible potions and reagents, create objects of each reagent'''
         cls.herbs = []
         cls.catalysts = []
         cls.makeReagents(["Irit", "Kwuarm", "Cadantine", "Lantadyme", "Dwarf Weed", "Arbuck", "Avantoe"], "Herb", "True")
@@ -22,6 +23,7 @@ class TestAlchemy(unittest.TestCase):
 
     @classmethod
     def makeReagents(cls, reagentsList, reagentType, variable):
+        '''Make a class object for every reagent that will be required'''
         for reagent in reagentsList:
             reagentName = f"{reagentType.lower()}" + (''.join(reagent.split()))
             newReagent = F"{reagentType}('{reagent}', 2, {variable})"
@@ -29,6 +31,7 @@ class TestAlchemy(unittest.TestCase):
             print(reagentName)
 
     def test_tower(self):
+        '''Test the functions'''
         tower = Laboratory()
         magnificus = Alchemist(45, 60, 82, 85, 34, 27, tower)
 
@@ -46,18 +49,18 @@ class TestAlchemy(unittest.TestCase):
         magnificus.refineReagents()
 
         ## Test potion mixing
-        print(f"Array Contains: {len(magnificus.getLaboratory()._Laboratory__potions)} ---------------------------------------------")
+        print(f"Array Contains: {len(magnificus.getLaboratory().getPotions())} ---------------------------------------------")
         for superPotion in self.superPotions:
             magnificus.mixPotion(superPotion)
             magnificus.mixPotion(superPotion)
         for extremePotion in self.extremePotions:
             magnificus.mixPotion(extremePotion)  
-        print(f"Array Contains: {len(magnificus.getLaboratory()._Laboratory__potions)} ---------------------------------------------")
+        print(f"Array Contains: {len(magnificus.getLaboratory().getPotions())} ---------------------------------------------")
 
         ## Test potion drinking
-        while len(magnificus.getLaboratory()._Laboratory__potions) > 0:
-            magnificus.drinkPotion(magnificus.getLaboratory()._Laboratory__potions[0])
-        print(f"Array Contains: {len(magnificus.getLaboratory()._Laboratory__potions)} ---------------------------------------------")
+        while len(magnificus.getLaboratory().getPotions()) > 0:
+            magnificus.drinkPotion(magnificus.getLaboratory().getPotions()[0])
+        print(f"Array Contains: {len(magnificus.getLaboratory().getPotions())} ---------------------------------------------")
 
         
 if __name__ == '__main__':
