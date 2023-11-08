@@ -35,41 +35,50 @@ class Laboratory():
                             reagentFound = True
                             primaryReagent = catalyst
                 if reagentFound == True:
-
+                    
                     # If secondary ingredient is in laboratory
                     loopBool = False
+                    superPotion = None
                     for potionX in self.__potions:
                         if loopBool == False:
                             if potionX.getName() == secondaryIngredient:
-
                                 loopBool = True
-                                # Add potion
-                                newPotion = ExtremePotion(name, stat, primaryReagent, potionX)
-                                self.__potions.append(newPotion)
+                                superPotion = potionX
+                    if loopBool == True:
 
-                                # Remove ingredients
-                                if isinstance(primaryReagent, Herb):
-                                    isHerbGone = False
-                                    for herb in self.__herbs:
-                                        if isHerbGone == False:
-                                            if herb is primaryReagent:
-                                                self.__herbs.remove(herb)
-                                elif isinstance(primaryReagent, Catalyst):
-                                    isCatalystGone = False
-                                    for catalyst in self.__catalysts:
-                                        if isCatalystGone == False:
-                                            if catalyst is primaryReagent:
-                                                self.__catalysts.remove(catalyst)
-                                                break
-                                else:
-                                    raise ValueError(f"Primary Ingredient is neither a Herb or a Catalyst!")
-                                self.__potions.remove(potionX)
+                        # Add potion
+                        newExtremePotion = ExtremePotion(name, stat, primaryReagent, superPotion)
+                        self.__potions.remove(superPotion)
+                        self.__potions.append(newExtremePotion)
+                        
+                        # Remove ingredients
+                        if isinstance(primaryReagent, Herb):
+                            isHerbGone = False
+                            for herb in self.__herbs:
+                                if isHerbGone == False:
+                                    if herb is primaryReagent:
+                                        self.__herbs.remove(herb)
+                            print(f"Alchemist mixed {name}, using {primaryIngredient} and {secondaryIngredient}")    
+
+                        elif isinstance(primaryReagent, Catalyst):
+                            isCatalystGone = False
+                            for catalyst in self.__catalysts:
+                                if isCatalystGone == False:
+                                    if catalyst is primaryReagent:
+                                        self.__catalysts.remove(catalyst)
+                                        isCatalystGone = True
+                            print(f"Alchemist mixed {name}, using {primaryIngredient} and {secondaryIngredient}")
+                                
+                        else:
+                            raise ValueError(f"Primary Ingredient is neither a Herb or a Catalyst!")
+                        
+                                
 
                 # If ingredients are not present        
-                            else:
-                                raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
+                    else:
+                        raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
                 else:
-                    raise ValueError(f"{primaryIngredient} is not currently a valid ingredient in the Laboratory!")
+                    raise ValueError(f"{primaryIngredient} is not currently a valid reagent in the Laboratory!")
                 
         # If output is super potion
         elif type == "Super":
@@ -93,30 +102,32 @@ class Laboratory():
                 if catalystFound == True: 
 
                     # Add potion
-                    newPotion = SuperPotion(name, stat, newHerb, newCatalyst)
-                    self.__potions.append(newPotion)
+                    newSuperPotion = SuperPotion(name, stat, newHerb, newCatalyst)
+                    self.__potions.append(newSuperPotion)
 
                     # Remove ingredients
                     self.__herbs.remove(newHerb)
                     self.__catalysts.remove(newCatalyst)
 
+                    print(f"Alchemist mixed {name}, using {primaryIngredient} and {secondaryIngredient}")
+
             # If ingredients are not present           
                 else:
-                        raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
+                    raise ValueError(f"{secondaryIngredient} is not currently a valid catalyst in the Laboratory!")
             else:
-                raise ValueError(f"{primaryIngredient} is not currently a valid ingredient in the Laboratory!")
-                            
-
-        print(f"Alchemist mixed {name}, using {primaryIngredient} and {secondaryIngredient}")
+                raise ValueError(f"{primaryIngredient} is not currently a valid herb in the Laboratory!")
+        else:
+            raise ValueError(f"{name} is not a Super Potion or an Extreme Potion!")                    
 
     def addReagent(self, reagent, amount):
         if isinstance(reagent, Herb):
             for i in range(amount):
-                new_herb = Herb(reagent.getName(), reagent.getPotency(), reagent.getGrimy())
-                self.__herbs.append(new_herb)
+                newHerb = Herb(reagent.getName(), reagent.getPotency(), reagent.getGrimy())
+                self.__herbs.append(newHerb)
         elif isinstance(reagent, Catalyst):
             for x in range(amount):
-                self.__catalysts.append(reagent)
+                newCatalyst = Catalyst(reagent.getName(), reagent.getPotency(), reagent.getQuality())
+                self.__catalysts.append(newCatalyst)
         else:
             raise TypeError(f"{reagent} is neither a Herb or a Catalyst!")
 
@@ -139,7 +150,17 @@ class Alchemist():
         self.__laboratory = laboratory
         self.__recipes = {
             "Super Attack": {"Herb": "Irit", "Catalyst": "Eye of Newt"},
-            "Extreme Attack": {"Herb": "Avantoe", "Super Potion": "Super Attack"}
+            "Super Strength": {"Herb": "Kwuarm", "Catalyst": "Limpwurt Root"},
+            "Super Defence": {"Herb": "Cadantine", "Catalyst": "White Berries"},
+            "Super Magic": {"Herb": "Lantadyme", "Catalyst": "Potato Cactus"},
+            "Super Ranging": {"Herb": "Dwarf Weed", "Catalyst": "Wine of Zamorak"},
+            "Super Necromancy": {"Herb": "Arbuck", "Catalyst": "Blood of Orcus"},
+            "Extreme Attack": {"Herb": "Avantoe", "Super Potion": "Super Attack"},
+            "Extreme Strength": {"Herb": "Dwarf Weed", "Super Potion": "Super Strength"},
+            "Extreme Defence": {"Herb": "Lantadyme", "Super Potion": "Super Defence"},
+            "Extreme Magic": {"Catalyst": "Ground Mud Rune", "Super Potion": "Super Magic"},
+            "Extreme Ranging": {"Catalyst": "Grenwall Spike", "Super Potion": "Super Ranging"},
+            "Extreme Necromancy": {"Catalyst": "Ground Miasma Rune", "Super Potion": "Super Necromancy"}
         }
 
     def __validateStat(self, attributeName, value):
@@ -158,8 +179,9 @@ class Alchemist():
     def mixPotion(self, recipe):
         '''Sends potion recipe to laboratory'''
         # Get ingredients
+        recipes = self.getRecipes()
         if recipe in self.__recipes:
-            ingredientsList = list(self.__recipes[recipe].values())
+            ingredientsList = list(recipes[recipe].values())
 
             primary =  ingredientsList[0]
             secondary = ingredientsList[1]
@@ -168,10 +190,10 @@ class Alchemist():
         
         # Get potion type and stat
         if "Super" in recipe:
-            type = recipe[:-7]
+            type = recipe.split(' ')[0]
             stat = recipe[6:]
         elif "Extreme" in recipe:
-            type = recipe[:-7]
+            type = recipe.split(' ')[0]
             stat = recipe[8:]
         else:
             raise NameError(f"The {recipe} is not a Super Potion or an Extreme Potion!") 
@@ -181,8 +203,7 @@ class Alchemist():
     def drinkPotion(self, potion):
         '''Drinks potion and adds status effect to alchemist'''
         if potion in self.__laboratory._Laboratory__potions:
-            self.__laboratory._Laboratory__potions.remove(potion)
-
+            print(potion.getStat())
             # Add potion stats
             if potion.getStat() == "Attack":
                 self.addPotionStat(potion, "_Alchemist__attack")
@@ -195,7 +216,9 @@ class Alchemist():
             if potion.getStat() == "Ranging":
                 self.addPotionStat(potion, "_Alchemist__ranged")
             if potion.getStat() == "Necromancy":
-                self.addPotionStat(potion, "_Alchemist__necromancy")    
+                self.addPotionStat(potion, "_Alchemist__necromancy")  
+
+            self.__laboratory._Laboratory__potions.remove(potion)  
         return f"{potion.getName()}"
     
     def addPotionStat(self, potion, statName):
@@ -290,8 +313,7 @@ class ExtremePotion(Potion):
         self.__boost = self.calculateBoost()
 
     def calculateBoost(self):
-        print(self.__potion)
-        newBoost = round((self.__reagent.getPotency() * self.__potion.calculateBoost()) * 3.0, 2)
+        newBoost = round((self.__reagent.getPotency() * self.__potion.getBoost()) * 3.0, 2)
         print(f"Extreme Potion Boost is: {newBoost}")
         return newBoost
 
