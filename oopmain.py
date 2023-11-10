@@ -72,8 +72,6 @@ class Laboratory():
                         else:
                             raise ValueError(f"Primary Ingredient is neither a Herb or a Catalyst!")
                         
-                                
-
                 # If ingredients are not present        
                     else:
                         raise ValueError(f"{secondaryIngredient} is not currently a valid potion in the Laboratory!")
@@ -120,6 +118,7 @@ class Laboratory():
             raise ValueError(f"{name} is not a Super Potion or an Extreme Potion!")                    
 
     def addReagent(self, reagent, amount):
+        '''Add a reagent to the corresponding list'''
         if isinstance(reagent, Herb):
             for i in range(amount):
                 newHerb = Herb(reagent.getName(), reagent.getPotency(), reagent.getGrimy())
@@ -132,12 +131,15 @@ class Laboratory():
             raise TypeError(f"{reagent} is neither a Herb or a Catalyst!")
         
     def getPotions(self):
+        '''Gets the potions list'''
         return self.__potions
     
     def getHerbs(self):
+        '''Gets the herbs list'''
         return self.__herbs
     
     def getCatalysts(self):
+        '''Gets the catalysts list'''
         return self.__catalysts
 
 class Alchemist():
@@ -182,7 +184,7 @@ class Alchemist():
         return self.__laboratory
 
     def getRecipes(self):
-        '''Gets the recipes'''
+        '''Gets the recipes dictionary'''
         return self.__recipes
 
     def mixPotion(self, recipe):
@@ -256,6 +258,7 @@ class Alchemist():
         
 
     def collectReagent(self, reagent, amount):
+        '''Adds reagent to laboratory through alchemist'''
         print(f"Collected {amount} {reagent.getName()}(s) and sent them to the Laboratory!")
         self.getLaboratory().addReagent(reagent, amount)
 
@@ -301,6 +304,7 @@ class SuperPotion(Potion):
         self.__boost = self.calculateBoost()
 
     def calculateBoost(self):
+        '''Calculate the boost variable'''
         newBoost = round((self.__herb.getPotency() + (self.__catalyst.getPotency() * self.__catalyst.getQuality())) * 1.5, 2)
         print(f"Super Potion Boost is: {newBoost}")
         return newBoost
@@ -322,6 +326,7 @@ class ExtremePotion(Potion):
         self.__boost = self.calculateBoost()
 
     def calculateBoost(self):
+        '''Calculate the boost variable'''
         newBoost = round((self.__reagent.getPotency() * self.__potion.getBoost()) * 3.0, 2)
         print(f"Extreme Potion Boost is: {newBoost}")
         return newBoost
@@ -362,6 +367,7 @@ class Herb(Reagent):
         self.__grimy = grimy
 
     def refine(self):
+        '''Refine the herb, remove its grime and increase its potency'''
         oldGrimy = self.getGrimy()
         oldPotency = self.getPotency()
         self.setGrimy(False)
@@ -382,6 +388,7 @@ class Catalyst(Reagent):
         self.__quality = quality
 
     def refine(self):
+        '''Refine the catalyst, increase its quality and potency'''
         oldQuality = self.getQuality()
         oldPotency = self.getPotency()
         isTen = False
