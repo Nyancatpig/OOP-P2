@@ -66,6 +66,8 @@ class TestAlchemy(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
+## Old Tests
+
 # tower = oopmain.Laboratory(herbs=["Irit", "Avantoe", "Irit", "Avantoe"], catalysts=["Eye of Newt", "Eye of Newt"])
 # magnificus = oopmain.Alchemist(45, 60, 82, 85, 34, 27, tower)
 # print(magnificus.getLaboratory().__doc__)

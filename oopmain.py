@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 
 
 class Laboratory():
-    '''Laboratory class, owns other classes'''
+    '''Laboratory class, owns other classes such as reagents and potions'''
     def __init__(self, potions=[], herbs=[], catalysts=[]):
         self.__potions = potions
         self.__herbs = herbs
@@ -400,6 +400,7 @@ class Catalyst(Reagent):
             self.__quality = 10
         self.setPotency(round(self.getPotency() * 2.5, 2))
         
+        # Output
         if isTen == True:
             print(f"{self.getName()} has been refined! Quality was already at the maximum, it cannot be refined any further, Potency went from {oldPotency} to {self.getPotency()}")
         else:
